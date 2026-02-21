@@ -27,3 +27,14 @@ target
 opencode-dev
 logs/
 *.bun-build
+
+# Terraform
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+crash.log
+crash.*.log
+*.tfvars
+*.tfvars.json
+.terraformrc
+terraform.rc
