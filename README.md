@@ -57,3 +57,14 @@ It reuses the existing `opencode` CLI/TUI/web UI and does **not** introduce a ne
 ```bash
 ./packages/sdk/js/script/build.ts
 ```
+
+---
+
+## Local Setup
+
+Required sequence:
+
+1. Run the Docker file to install Dafny, .NET, bun, and other related services.
+2. Run `bun install` at the repo root.
+3. Run `bun run build` from `packages\opencode`.
+4. Run `bun run dev`.
