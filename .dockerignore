@@ -1,0 +1,12 @@
+**/.git
+**/.gitignore
+**/node_modules
+**/dist
+**/build
+**/.cache
+**/.DS_Store
+**/data
+**/.opencode/node_modules
+**/.opencode/log
+**/.opencode/kv.json
+**/.opencode/*.db
