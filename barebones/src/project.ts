@@ -26,6 +26,7 @@ export async function paths(start = process.cwd()): Promise<Paths> {
     dafny,
     db: path.join(barebones, "app.db"),
     config: path.join(barebones, "config.json"),
+    auth: path.join(barebones, "auth.json"),
   }
 }
 

@@ -1,0 +1,21 @@
+{
+  "name": "barebones",
+  "private": true,
+  "type": "module",
+  "packageManager": "bun@1.3.11",
+  "scripts": {
+    "dev": "bun run src/main.ts",
+    "start": "bun run src/main.ts",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "dependencies": {
+    "@ai-sdk/amazon-bedrock": "4.0.83",
+    "@aws-sdk/credential-providers": "3.1016.0",
+    "ai": "6.0.138"
+  },
+  "devDependencies": {
+    "@tsconfig/bun": "1.0.9",
+    "@types/bun": "1.3.9",
+    "typescript": "5.8.2"
+  }
+}

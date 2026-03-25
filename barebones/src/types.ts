@@ -42,4 +42,5 @@ export type Paths = {
   dafny: string
   db: string
   config: string
+  auth: string
 }

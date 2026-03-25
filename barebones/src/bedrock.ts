@@ -4,6 +4,7 @@ import os from "os"
 import path from "path"
 import { createAmazonBedrock } from "@ai-sdk/amazon-bedrock"
 import { fromNodeProviderChain } from "@aws-sdk/credential-providers"
+import { root } from "./project"
 
 function exists(value?: string) {
   return Boolean(value && value.trim())
@@ -41,6 +42,23 @@ async function shared() {
   }
 }
 
+async function authPath() {
+  return path.join(await root(), ".barebones", "auth.json")
+}
+
+async function savedApiKey() {
+  const file = await authPath()
+  const json = await Bun.file(file)
+    .json()
+    .catch(() => undefined) as { apiKey?: string } | undefined
+  return json?.apiKey?.trim()
+}
+
+export async function saveApiKey(key: string) {
+  const file = await authPath()
+  await Bun.write(file, JSON.stringify({ apiKey: key.trim() }, null, 2), { mode: 0o600 })
+}
+
 export async function sharedProfile(name: string) {
   const files = await shared()
   const config = files.config[`profile ${name}`] ?? files.config[name] ?? {}
@@ -60,6 +78,7 @@ export async function sharedProfile(name: string) {
 
 export async function hasAwsCreds(cfg?: Cfg) {
   if (exists(process.env.AWS_BEARER_TOKEN_BEDROCK)) return true
+  if (exists(await savedApiKey())) return true
   if (exists(process.env.AWS_ACCESS_KEY_ID) && exists(process.env.AWS_SECRET_ACCESS_KEY)) return true
   if (exists(process.env.AWS_WEB_IDENTITY_TOKEN_FILE) && exists(process.env.AWS_ROLE_ARN)) return true
   if (exists(process.env.AWS_CONTAINER_CREDENTIALS_RELATIVE_URI)) return true
@@ -69,9 +88,10 @@ export async function hasAwsCreds(cfg?: Cfg) {
 }
 
 export async function creds(cfg: Cfg) {
-  if (exists(process.env.AWS_BEARER_TOKEN_BEDROCK)) {
+  const apiKey = process.env.AWS_BEARER_TOKEN_BEDROCK?.trim() || await savedApiKey()
+  if (exists(apiKey)) {
     return {
-      apiKey: process.env.AWS_BEARER_TOKEN_BEDROCK,
+      apiKey,
       region: cfg.region,
       baseURL: cfg.endpoint,
     }
@@ -100,7 +120,7 @@ export async function creds(cfg: Cfg) {
 }
 
 export async function provider(cfg: Cfg) {
-  const apiKey = process.env.AWS_BEARER_TOKEN_BEDROCK?.trim()
+  const apiKey = process.env.AWS_BEARER_TOKEN_BEDROCK?.trim() || await savedApiKey()
   if (apiKey) {
     return createAmazonBedrock({
       apiKey,
